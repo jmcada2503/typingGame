@@ -29,6 +29,40 @@ class game():
         self.deltaTime = 0.05
         self.nEnemies = 5
 
+    def buildLine(self, line):
+        lineStr = " "*self.screenSize.columns
+        enemiesLine = []
+        for i in self.enemies:
+            if i.position[1] == line:
+                enemiesLine.append(i)
+
+        problems = [[[-1, -1], []]]
+        for i in range(len(enemiesLine)):
+            noProblem = True
+            for problem in range(len(problems)):
+                if (enemiesLine[i].position[0] >= problems[problem][0][0] and enemiesLine[i].position[0] <= problems[problem][0][1]) or (enemiesLine[i].position[0]+(len(enemiesLine[i].getBody())-1) <= problems[problem][0][1] and enemiesLine[i].position[0]+(len(enemiesLine[i].getBody())-1) >= problems[problem][0][0]):
+                    noProblem = False
+                    problems[problem][0][0] = min(problems[problem][0][0], enemiesLine[i].position[0])
+                    problems[problem][0][1] = max(problems[problem][0][1], enemiesLine[i].position[0]+(len(enemiesLine[i].getBody())-1))
+                    problems[problem][1].append(enemiesLine[i])
+                    break
+            if noProblem:
+                problems.append([[enemiesLine[i].position[0], enemiesLine[i].position[0]+(len(enemiesLine[i].getBody())-1)], [enemiesLine[i]]])
+        problems = problems[1:]
+
+        for i in range(len(problems)):
+            for j in range(len(problems[i][1])-1):
+                for k in range(len(problems[i][1])-1):
+                    if problems[i][1][k].focused and problems[i][1][k+1].focused == False:
+                        problems[i][1][k], problems[i][1][k+1] = problems[i][1][k+1], problems[i][1][k]
+
+        for i in range(len(problems)):
+            for j in range(len(problems[i][1])):
+                lineStr = lineStr[:problems[i][1][j].position[0]+1] + problems[i][1][j].getBody(self.player.getWord())
+
+        return lineStr
+
+        
     def setFocusedEnemies(self):
         for i in self.enemies:
             if self.player.getWord() == i.word[:len(self.player.getWord())] and len(self.player.getWord()) > 0:
@@ -41,14 +75,12 @@ class game():
 
         self.player = player
         self.words = readJson("./data/words.json")
-        self.faces = readJson("./data/faces.json")
         self.enemies = []
         for i in range(self.nEnemies):
             self.enemies.append(Enemy(self.deltaTime, level=1, died=False, speed=0.5))
         line = 0
         for enemy in range(len(self.enemies)):
             self.enemies[enemy].setWord(getRandomWord(self.words[str(self.enemies[enemy].level)]))
-            self.enemies[enemy].setFace(getRandomWord(self.faces[str(self.enemies[enemy].level)]))
             self.enemies[enemy].setPosition([self.enemies[enemy].getRandomX(self.screenSize.columns), line])
             line -= 2
 
@@ -72,16 +104,7 @@ class game():
 
             for line in range(self.screenSize.lines-2):
                 flag = True
-                for enemy in self.enemies:
-                    if enemy.position[1] == line:
-                        body = enemy.getBody(player.getWord())
-                        printOnFile(f"\nWriting: {player.getWord()}\n", "./data/out.txt")
-                        print(enemy.position[0]*" "+body[0]+"\n"+enemy.position[0]*" "+body[1])
-                        flag = False
-                        line += 1
-                        break
-                if flag:
-                    print()
+                print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n{' '*((self.screenSize.columns-5)//2)}/~~~\\\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()

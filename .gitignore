@@ -1,2 +1,4 @@
-*.swp
-*.pyc
+*.py.swp
+*.cpython-38.pyc
+
+data/out.txt
