@@ -1,1 +1,4 @@
-console
+Flask==2.1.2
+getkey==0.6.5
+requests==2.27.1
+termcolor==1.1.0
