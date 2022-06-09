@@ -105,7 +105,7 @@ class game():
 
     def quitGame(self):
         self.inGame = False
-        os.system("clear")
+        os.system("cls")
         exitMenu = MenuController(player=self.player, screenSize=self.screenSize, options={}, decitionEvent=self.menuSelect, title="Press any button to exit ...")
         print(exitMenu)
         exit()
@@ -129,7 +129,7 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(onlineMenu)
-            os.system("clear")
+            os.system("cls")
             print(menuStr)
             end = time.time()
             time.sleep(mainGame.deltaTime - (end-start))
@@ -173,7 +173,7 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(multiPlayerStartMenu)
-            os.system("clear")
+            os.system("cls")
             print(menuStr)
             end = time.time()
             time.sleep(mainGame.deltaTime - (end-start))
@@ -186,7 +186,7 @@ class game():
             while self.openMenu:
                 start = time.time()
                 menuStr = str(ipAddressMenu)
-                os.system("clear")
+                os.system("cls")
                 print(menuStr)
                 end = time.time()
                 time.sleep(mainGame.deltaTime - (end-start))
@@ -210,7 +210,7 @@ class game():
                 start = time.time()
                 menuStr = str(waitForPlayer)
                 self.server.readServerInfo()
-                os.system("clear")
+                os.system("cls")
                 print(menuStr)
                 end = time.time()
                 time.sleep(mainGame.deltaTime - (end-start))
@@ -265,7 +265,7 @@ class game():
                 # Move the enemy
                 enemy.step()
 
-            os.system("clear")
+            os.system("cls")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
@@ -284,7 +284,7 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(endGameMenu)
-            os.system("clear")
+            os.system("cls")
             print(menuStr)
             end = time.time()
             time.sleep(mainGame.deltaTime - (end-start))
@@ -327,7 +327,7 @@ class game():
                 # Move the enemy
                 enemy.step()
 
-            os.system("clear")
+            os.system("cls")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
@@ -346,7 +346,7 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(endGameMenu)
-            os.system("clear")
+            os.system("cls")
             print(menuStr)
             end = time.time()
             time.sleep(mainGame.deltaTime - (end-start))
@@ -378,7 +378,7 @@ class game():
                 # Move the enemy
                 enemy.step()
 
-            os.system("clear")
+            os.system("cls")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
@@ -397,7 +397,7 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(endGameMenu)
-            os.system("clear")
+            os.system("cls")
             print(menuStr)
             end = time.time()
             time.sleep(mainGame.deltaTime - (end-start))
