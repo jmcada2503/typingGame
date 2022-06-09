@@ -25,7 +25,7 @@ class Enemy():
             return self.word
 
     def getRandomX(self, ncols):
-        return randint(0, (ncols-max([len(i) for i in self.getBody()])))
+        return randint(0, (ncols-len(self.word)))
 
     def step(self):
         if self.movement >= self.speed:
