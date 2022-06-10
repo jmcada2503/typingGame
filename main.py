@@ -96,7 +96,7 @@ class EnemyController():
 class game():
 
     def __init__(self, player):
-        self.deltaTime = 0.05
+        self.deltaTime = 0.1
         self.screenSize = os.get_terminal_size()
         self.player = player
         self.inGame = True
