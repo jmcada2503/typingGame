@@ -13,8 +13,12 @@ log.disabled = True
 
 def readData():
     f = open(f"./data/server/data{serverPort}.json", "r")
-    data = json.load(f)
-    f.close()
+    try:
+        data = json.load(f)
+    except:
+        return readData()
+    finally:
+        f.close()
     return data
 
 def writeData(data):
@@ -65,8 +69,12 @@ class ServerController():
 
     def readServerInfo(self):
         f = open(f"./data/server/data{self.port}.json", "r")
-        self.data = json.load(f)
-        f.close()
+        try:
+            self.data = json.load(f)
+        except:
+            self.readServerInfo()
+        finally:
+            f.close()
 
     def getServerNewWords(self):
         words = self.data["serverNewWords"]
