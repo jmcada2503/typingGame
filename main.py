@@ -21,6 +21,11 @@ def readJson(path):
     with open(path, "r") as f:
         return json.load(f)
 
+def sleepTime(time):
+    if time >= 0:
+        return time
+    else:
+        return 0
 
 class EnemyController():
 
@@ -105,7 +110,7 @@ class game():
 
     def quitGame(self):
         self.inGame = False
-        os.system("cls")
+        os.system("clear")
         exitMenu = MenuController(player=self.player, screenSize=self.screenSize, options={}, decitionEvent=self.menuSelect, title="Press any button to exit ...")
         print(exitMenu)
         exit()
@@ -129,10 +134,10 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(onlineMenu)
-            os.system("cls")
+            os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.singlePlayer()
@@ -173,10 +178,10 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(multiPlayerStartMenu)
-            os.system("cls")
+            os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             # Connect to a server
@@ -186,10 +191,10 @@ class game():
             while self.openMenu:
                 start = time.time()
                 menuStr = str(ipAddressMenu)
-                os.system("cls")
+                os.system("clear")
                 print(menuStr)
                 end = time.time()
-                time.sleep(mainGame.deltaTime - (end-start))
+                time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
             self.client = ClientController(self.deltaTime)
             self.client.startClient(self.menuSelection)
@@ -210,10 +215,10 @@ class game():
                 start = time.time()
                 menuStr = str(waitForPlayer)
                 self.server.readServerInfo()
-                os.system("cls")
+                os.system("clear")
                 print(menuStr)
                 end = time.time()
-                time.sleep(mainGame.deltaTime - (end-start))
+                time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
             self.serverPlayerGame()
 
@@ -265,13 +270,13 @@ class game():
                 # Move the enemy
                 enemy.step()
 
-            os.system("cls")
+            os.system("clear")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
-            time.sleep(self.deltaTime - (end-start))
+            time.sleep(sleepTime(self.deltaTime - (end-start)))
             clock += self.deltaTime
 
         self.openMenu = True
@@ -284,10 +289,10 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(endGameMenu)
-            os.system("cls")
+            os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.startMenu()
@@ -327,13 +332,13 @@ class game():
                 # Move the enemy
                 enemy.step()
 
-            os.system("cls")
+            os.system("clear")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
-            time.sleep(self.deltaTime - (end-start))
+            time.sleep(sleepTime(self.deltaTime - (end-start)))
             clock += self.deltaTime
 
         self.openMenu = True
@@ -346,10 +351,10 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(endGameMenu)
-            os.system("cls")
+            os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.startMenu()
@@ -378,13 +383,13 @@ class game():
                 # Move the enemy
                 enemy.step()
 
-            os.system("cls")
+            os.system("clear")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
-            time.sleep(self.deltaTime - (end-start))
+            time.sleep(sleepTime(self.deltaTime - (end-start)))
             clock += self.deltaTime
 
         self.openMenu = True
@@ -397,10 +402,10 @@ class game():
         while self.openMenu:
             start = time.time()
             menuStr = str(endGameMenu)
-            os.system("cls")
+            os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(sleepTime(mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.startMenu()
