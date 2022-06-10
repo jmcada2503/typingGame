@@ -134,10 +134,12 @@ class ClientController():
     def getClientNewWords(self):
         if self.connecting >= self.connectionSpeed:
             response = requests.get(f"http://{self.ip}:{self.port}/clientNewWords")
-            data = response.json()
-            words = data.get("clientNewWords")
             self.connecting = 0
-            return words
+            if response.status_code == 200:
+                data = response.json()
+                words = data.get("clientNewWords")
+                return words
+            return []
         else:
             self.connecting += self.deltaTime
             return []
