@@ -255,8 +255,11 @@ class game():
                 break
 
             # Check for new words on server
-            self.server.readServerInfo()
-            self.enemyController.addToWaitingList(self.server.getServerNewWords())
+	    try:
+                self.server.readServerInfo()
+                self.enemyController.addToWaitingList(self.server.getServerNewWords())
+	    except:
+	        pass
 
             # Call Enemy spawner
             self.enemyController.enemyOnlineSpawner(self.screenSize)
@@ -333,7 +336,7 @@ class game():
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
-            time.sleep(self.deltaTime - (end-start))
+            time.sleep(max(self.deltaTime - (end-start), 0))
             clock += self.deltaTime
 
         self.openMenu = True
