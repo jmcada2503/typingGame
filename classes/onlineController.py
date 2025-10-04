@@ -4,6 +4,7 @@ import requests
 import json
 import socket
 import logging
+import sys
 
 server = Flask(__name__)
 serverPort = 4000
@@ -11,11 +12,23 @@ serverPort = 4000
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
+DEFAULT_SERVER_DATA = {
+    "serverNewWords": [],
+    "clientNewWords": [],
+    "serverPlayer": "up",
+    "clientPlayer": "up"
+}
+
 def readData():
-    f = open(f"./data/server/data{serverPort}.json", "r")
-    data = json.load(f)
-    f.close()
-    return data
+    try:
+        f = open(f"./data/server/data{serverPort}.json", "r")
+        data = json.load(f)
+        f.close()
+        return data
+    except Exception as e:
+        print(f"[ERROR] [DATA READ] -> {e}", file=sys.stderr)
+        return DEFAULT_SERVER_DATA
+
 
 def writeData(data):
     f = open(f"./data/server/data{serverPort}.json", "w")
