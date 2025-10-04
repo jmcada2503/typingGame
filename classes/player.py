@@ -39,7 +39,7 @@ class Player():
 
     def readInput(self):
         key = getkey()
-        if key:
+        if key and len(key) == 1:
             if self.menu:
                 if type(self.menu).__name__ == "MenuController":
                     self.readMenuKeys(key)
