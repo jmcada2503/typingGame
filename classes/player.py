@@ -1,3 +1,4 @@
+import sys
 from getkey import getkey, keys
 from termcolor import colored
 
@@ -39,22 +40,26 @@ class Player():
 
     def readInput(self):
         key = getkey()
-        if key and len(key) == 1:
+        if key:
             if self.menu:
                 if type(self.menu).__name__ == "MenuController":
                     self.readMenuKeys(key)
                 elif type(self.menu).__name__ == "InputMenuController":
                     self.readInputMenu(key)
             else:
-                if ord(key) == 127:
-                    if len(self.writing) > 0:
-                        self.writing = self.writing[:-1]
-                elif ord(key) == 32:
-                    self.shoot()
-                elif ord(key) == 27:
-                    self.quit()
-                elif ord(key) != 10:
-                    self.writing += key
+                try:
+                    key_code = ord(key)
+                    if key_code == 127:
+                        if len(self.writing) > 0:
+                            self.writing = self.writing[:-1]
+                    elif key_code == 32:
+                        self.shoot()
+                    elif key_code == 27:
+                        self.quit()
+                    elif key_code != 10:
+                        self.writing += key
+                except Exception as e:
+                    print(f"[ERROR] -> {e}", file=sys.stderr)
 
     def setAttackWord(self, word):
         self.attackWord = word
