@@ -321,7 +321,10 @@ class game():
                 break
 
             # Check for new words on server
-            self.enemyController.addToWaitingList(self.client.getClientNewWords())
+            try:
+                self.enemyController.addToWaitingList(self.client.getClientNewWords())
+            except:
+                pass
 
             # Call Enemy spawner
             self.enemyController.enemyOnlineSpawner(self.screenSize)
