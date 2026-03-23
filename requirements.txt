@@ -1,1 +1,5 @@
 console
+termcolor
+getkey
+flask
+requests

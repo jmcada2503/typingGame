@@ -390,7 +390,7 @@ class game():
             print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
-            time.sleep(self.deltaTime - (end-start))
+            time.sleep(max(self.deltaTime - (end-start), 0))
             clock += self.deltaTime
 
         self.openMenu = True
