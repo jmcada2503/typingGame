@@ -132,7 +132,7 @@ class game():
             os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.singlePlayer()
@@ -176,7 +176,7 @@ class game():
             os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             # Connect to a server
@@ -189,7 +189,7 @@ class game():
                 os.system("clear")
                 print(menuStr)
                 end = time.time()
-                time.sleep(mainGame.deltaTime - (end-start))
+                time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
             self.client = ClientController(self.deltaTime)
             self.client.startClient(self.menuSelection)
@@ -290,7 +290,7 @@ class game():
             os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.startMenu()
@@ -355,7 +355,7 @@ class game():
             os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.startMenu()
@@ -406,7 +406,7 @@ class game():
             os.system("clear")
             print(menuStr)
             end = time.time()
-            time.sleep(mainGame.deltaTime - (end-start))
+            time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
         if self.menuSelection == 0:
             self.startMenu()
