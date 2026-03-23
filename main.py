@@ -213,7 +213,7 @@ class game():
                 os.system("clear")
                 print(menuStr)
                 end = time.time()
-                time.sleep(mainGame.deltaTime - (end-start))
+                time.sleep(min(0, mainGame.deltaTime - (end-start)))
 
             self.serverPlayerGame()
 
