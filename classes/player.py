@@ -22,6 +22,9 @@ class Player():
             return colored(self.attackWord, "red", attrs=['bold'])
 
     def readMenuKeys(self, key):
+        if len(self.menu.options) == 0:
+            self.menu.enter()
+            return
         if key == 'j' or key == keys.DOWN:
             self.menu.keyDown()
         elif key == 'k' or key == keys.UP:

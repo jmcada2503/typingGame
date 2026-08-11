@@ -42,7 +42,10 @@ class MenuController():
 
     def enter(self):
         self.player.menu = False
-        self.decitionEvent(self.options[list(self.options.keys())[self.selected]])
+        if len(self.options) > 0:
+            self.decitionEvent(self.options[list(self.options.keys())[self.selected]])
+        else:
+            self.decitionEvent(None)
 
 class InputMenuController():
     def __init__(self, player, screenSize, inputLabel, decitionEvent, title=None):

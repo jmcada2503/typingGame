@@ -101,13 +101,20 @@ class game():
         self.player = player
         self.inGame = True
         self.inputThread = Thread(target=self.readPlayerInput)
+        self.inputThread.daemon = True
         self.inputThread.start()
 
     def quitGame(self):
-        self.inGame = False
-        os.system("clear")
         exitMenu = MenuController(player=self.player, screenSize=self.screenSize, options={}, decitionEvent=self.menuSelect, title="Press any button to exit ...")
-        print(exitMenu)
+        self.player.menu = exitMenu
+        self.openMenu = True
+        while self.openMenu:
+            start = time.time()
+            os.system("clear")
+            print(str(exitMenu))
+            end = time.time()
+            time.sleep(max(0, mainGame.deltaTime - (end-start)))
+        self.inGame = False
         exit()
 
     def readPlayerInput(self):
@@ -241,6 +248,7 @@ class game():
         self.player.menu = False
         self.player.writing = ""
         clock = 0
+        won = False
 
         while True:
             start = time.time()
@@ -252,12 +260,17 @@ class game():
             # Enemy Attack
             self.player.hit(self.enemyController.enemyAttack(self.screenSize))
             if self.player.lives <= 0:
+                self.server.setServerDead()
+                won = False
                 break
 
             # Check for new words on server
             try:
                 self.server.readServerInfo()
                 self.enemyController.addToWaitingList(self.server.getServerNewWords())
+                if self.server.isClientDead():
+                    won = True
+                    break
             except:
                 pass
 
@@ -271,7 +284,7 @@ class game():
             os.system("clear")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
-            print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
+            print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {self.player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(self.player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
             time.sleep(max(self.deltaTime - (end-start), 0))
@@ -281,7 +294,7 @@ class game():
         endGameMenu = MenuController(player=self.player, screenSize=self.screenSize, options={
             "Restart": 0,
             "Exit": 1
-            }, decitionEvent=self.menuSelect, title="GAME OVER")
+            }, decitionEvent=self.menuSelect, title="YOU WIN" if won else "GAME OVER")
         self.player.menu = endGameMenu
 
         while self.openMenu:
@@ -307,6 +320,7 @@ class game():
         self.player.menu = False
         self.player.writing = ""
         clock = 0
+        won = False
 
         while True:
             start = time.time()
@@ -318,11 +332,16 @@ class game():
             # Enemy Attack
             self.player.hit(self.enemyController.enemyAttack(self.screenSize))
             if self.player.lives <= 0:
+                self.client.setClientDead()
+                won = False
                 break
 
             # Check for new words on server
             try:
                 self.enemyController.addToWaitingList(self.client.getClientNewWords())
+                if self.client.isServerDead():
+                    won = True
+                    break
             except:
                 pass
 
@@ -336,7 +355,7 @@ class game():
             os.system("clear")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
-            print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
+            print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {self.player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(self.player.lives))))}/~~~\\{' '*(((self.screenSize.columns-5)//2)-(2+len(self.player.attackWord)))}{self.player.getAttackWord()}\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
             time.sleep(max(self.deltaTime - (end-start), 0))
@@ -346,7 +365,7 @@ class game():
         endGameMenu = MenuController(player=self.player, screenSize=self.screenSize, options={
             "Restart": 0,
             "Exit": 1
-            }, decitionEvent=self.menuSelect, title="GAME OVER")
+            }, decitionEvent=self.menuSelect, title="YOU WIN" if won else "GAME OVER")
         self.player.menu = endGameMenu
 
         while self.openMenu:
@@ -387,7 +406,7 @@ class game():
             os.system("clear")
             for line in range(self.screenSize.lines-2):
                 print(self.buildLine(line))
-            print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(player.lives))))}/~~~\\\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
+            print(f"{' '*((self.screenSize.columns-3)//2)}/^\\\n  lives: {self.player.lives}{' '*(((self.screenSize.columns-5)//2)-(9+len(str(self.player.lives))))}/~~~\\\n"+f"{' '*((self.screenSize.columns-len(self.player.getWord()))//2)}{self.player.getWord()}", end="")
 
             end = time.time()
             time.sleep(max(self.deltaTime - (end-start), 0))

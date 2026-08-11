@@ -16,7 +16,7 @@ DEFAULT_SERVER_DATA = {
     "serverNewWords": [],
     "clientNewWords": [],
     "serverPlayer": "up",
-    "clientPlayer": "up"
+    "clientPlayer": "down"
 }
 
 def readData():
@@ -46,6 +46,13 @@ def setClientPlayerUp():
     writeData(data)
     return jsonify({"clientPlayer":"up", "serverPlayer":"up"})
 
+@server.route('/setClientDead', methods=["GET"])
+def setClientDead():
+    data = readData()
+    data["clientPlayer"] = "dead"
+    writeData(data)
+    return jsonify({"status":"ok"})
+
 @server.route('/clientAttack', methods=["GET"])
 def clientAttack():
     data = readData()
@@ -56,17 +63,17 @@ def clientAttack():
 @server.route("/clientNewWords", methods=["GET"])
 def clientNewWords():
     data = readData()
-    words = data["clientNewWords"]
+    words = data.get("clientNewWords", [])
     data["clientNewWords"] = []
     writeData(data)
-    return jsonify({"clientNewWords":words, "status": "up"})
+    return jsonify({"clientNewWords": words, "status": "up", "serverPlayer": data.get("serverPlayer", "up")})
 
 class ServerController():
 
     def __init__(self, deltaTime, connectionSpeed=0.5):
         global server
         self.server = server
-        self.data = {"serverNewWords":[], "clientNewWords":[]}
+        self.data = {"serverNewWords":[], "clientNewWords":[], "serverPlayer":"up", "clientPlayer":"down"}
         self.deltaTime = deltaTime
         self.connectionSpeed = connectionSpeed
         self.connecting = 0
@@ -82,10 +89,20 @@ class ServerController():
         f.close()
 
     def getServerNewWords(self):
-        words = self.data["serverNewWords"]
+        words = self.data.get("serverNewWords", [])
         self.data["serverNewWords"] = []
         self.writeServerInfo()
         return words
+
+    def setServerDead(self):
+        self.data["serverPlayer"] = "dead"
+        self.writeServerInfo()
+
+    def isClientDead(self):
+        try:
+            return self.data.get("clientPlayer") == "dead"
+        except:
+            return False
 
     def startServer(self):
         global serverPort
@@ -108,6 +125,7 @@ class ServerController():
         serverPort = port
 
         self.serverThread = Thread(target=self.server.run, kwargs={"port":port, "host":"0.0.0.0"})
+        self.serverThread.daemon = True
         self.serverThread.start()
 
         self.writeServerInfo()
@@ -129,6 +147,7 @@ class ClientController():
         self.deltaTime = deltaTime
         self.connectionSpeed = connectionSpeed
         self.connecting = 0
+        self.serverPlayerStatus = "up"
 
     def startClient(self, ip):
         self.ip = ip
@@ -144,13 +163,27 @@ class ClientController():
     def clientAttack(self, word):
         response = requests.get(f"http://{self.ip}:{self.port}/clientAttack", params={"word":word})
 
+    def setClientDead(self):
+        try:
+            requests.get(f"http://{self.ip}:{self.port}/setClientDead")
+        except:
+            pass
+
     def getClientNewWords(self):
         if self.connecting >= self.connectionSpeed:
-            response = requests.get(f"http://{self.ip}:{self.port}/clientNewWords")
-            data = response.json()
-            words = data.get("clientNewWords")
-            self.connecting = 0
-            return words
+            try:
+                response = requests.get(f"http://{self.ip}:{self.port}/clientNewWords")
+                data = response.json()
+                words = data.get("clientNewWords", [])
+                self.serverPlayerStatus = data.get("serverPlayer", "up")
+                self.connecting = 0
+                return words
+            except:
+                self.connecting = 0
+                return []
         else:
             self.connecting += self.deltaTime
             return []
+
+    def isServerDead(self):
+        return getattr(self, "serverPlayerStatus", "up") == "dead"
